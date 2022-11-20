@@ -5,9 +5,9 @@
 <body>
 	@using (Html.BeginForm("Login", "Login", FormMethod.Post)){
 		<p>Login</p>
-			@Html.TextBoxFor(m => m.login)
+			@Html.TextBoxFor(m => m.login, new {@class = "form-control", id = "Login", required="required"})
 		<p>Password</p>
-			@Html.PasswordFor(m => m.password)
+		@Html.PasswordFor(m => m.password, new {@class = "form-control", id = "Password", required="required"})
 		<br/>
 		<input type="submit" value="Log in" />
 		@Html.ValidationSummary(true)

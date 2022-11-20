@@ -1,4 +1,5 @@
 ﻿using BookStore.Models;
+using BookStore.Utils;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -11,16 +12,36 @@ namespace BookStore.Controllers
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+
         }
 
         public IActionResult Index()
         {
+            string s = HttpContext.Session.GetString("UserName");
+            if (s != null)
+            {
+                return View("~/Views/Authorized/Index.cshtml");
+            }
             return View();
         }
 
         public IActionResult Login()
         {
-            return View("~/Views/Login/Login.cshtml");
+            return View();
+        }
+
+        public ActionResult Logout()
+        {
+
+            HttpContext.Session.Clear();
+            HttpContext.Session.Remove("UserName");
+
+            return RedirectToAction("Login");
+        }
+
+        public IActionResult Books()
+        {
+            return View("~/Views/Authorized/Books/Yours.cshtml");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
