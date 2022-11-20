@@ -1,0 +1,15 @@
+﻿@model BookStore.Models.Auth
+@{
+	ViewData["Login"] = "Log In";
+}
+<body>
+	@using (Html.BeginForm("Login", "Login", FormMethod.Post)){
+		<p>Login</p>
+			@Html.TextBoxFor(m => m.login)
+		<p>Password</p>
+			@Html.PasswordFor(m => m.password)
+		<br/>
+		<input type="submit" value="Log in" />
+		@Html.ValidationSummary(true)
+	}
+</body>
