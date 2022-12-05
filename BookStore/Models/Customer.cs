@@ -12,7 +12,7 @@ namespace BookStore.Models
         public string password { get; set; }
         public string mail { get; set; }
         //public DateTime birth_date { get; set; }
-        public String number_phone { get; set; }
+        public string number_phone { get; set; }
        // public JsonContent UserSettings { get; set; }
     }
 }

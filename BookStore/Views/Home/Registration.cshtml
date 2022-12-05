@@ -1,0 +1,22 @@
+﻿@model BookStore.Models.Customer
+@{
+    ViewData["Registration"] = "Registration";
+}
+
+<body>
+	@using (Html.BeginForm("Registration", "Login", FormMethod.Post)){
+		<p>Enter your login (required)</p>
+			@Html.TextBoxFor(m => m.login, new {@class = "form-control", id = "Login", required="required"})
+		<p>Enter your password (required)</p>
+		@Html.PasswordFor(m => m.password, new {@class = "form-control", id = "Password", required="required"})
+		<br/>
+		<p>Enter your mail (required)</p>
+		@Html.TextBoxFor(m => m.mail, new {@class = "form-control", id = "Mail", required="required"})
+		<br />
+		<p>Enter your phone number (required)</p>
+		@Html.TextBoxFor(m => m.number_phone, new {@class = "form-control", id = "PhoneNumber", required="required"})
+		<br />
+		<input type="submit" value="Registration" />
+		@Html.ValidationSummary(true)
+	}
+</body>

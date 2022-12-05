@@ -33,6 +33,7 @@ namespace BookStore.Controllers
                 {
                     if (reader.HasRows)
                     {
+                        //string s = reader.GetString(0);
                         customerExist = true;
                     }
                 }
@@ -48,9 +49,47 @@ namespace BookStore.Controllers
             return View("~/Views/Home/Login.cshtml");
         }
 
-        private bool DoesCustomerExist(List<Customer> customers, string login, string password)
+        public IActionResult Registration(Customer customer)
         {
-            return customers.Find(c => c.password.Trim().Equals(password) && c.login.Trim().Equals(login)) != null ? true : false;
+            if(customer.id == null || customer.number_phone==null || customer.password ==  null || customer.number_phone == null)
+            {
+                ModelState.AddModelError("", "Fill all required fields");
+                return View("~/Views/Home/Login.cshtml");
+            }
+
+            using (NpgsqlConnection conn = new NpgsqlConnection())
+            {
+                conn.ConnectionString = ConnectionString.GetString();
+                conn.Open();
+                NpgsqlCommand cmd = new NpgsqlCommand();
+                cmd.Connection = conn;
+                cmd.CommandText = "select id from customer where login=\'" + customer.login + "\';";
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        ModelState.AddModelError("", "This login is already used. Choose another one");
+                        return View("~/Views/Home/Login.cshtml");
+                    }
+                }
+
+                cmd.CommandText = "select id from customer where mail=\'" + customer.login + "\';";
+                using (NpgsqlDataReader reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        ModelState.AddModelError("", "This mail is already used. Choose another one");
+                        return View("~/Views/Home/Login.cshtml");
+                    }
+                }
+
+                string password = MD5.GetHashString(customer.password);
+                cmd.CommandText = $"insert into customer (login, password, mail, number_phone) values (\'{customer.login}\', \'{password}\', \'{customer.mail}\', \'{customer.number_phone}\');";
+                cmd.ExecuteNonQuery();
+            }
+
+            HttpContext.Session.SetString("UserName", customer.login);
+            return View("/Views/Authorized/Authorizied.cshtml");
         }
     }
 }
